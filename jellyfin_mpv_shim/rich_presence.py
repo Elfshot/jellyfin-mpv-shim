@@ -6,21 +6,6 @@ RPC = Client(client_id)
 RPC.start()
 
 
-def media_text(media_type: str):
-    match media_type:
-        case "Anime":
-            return {"large_t": "an Anime", "large_i": "anime"}
-        case "Anime Movies":
-            return {"large_t": "an Anime Movie", "large_i": "a_movie"}
-        case "Kdrama":
-            return {"large_t": "a Kdrama", "large_i": "kdrama"}
-        case "Shows":
-            return {"large_t": "a Show", "large_i": "show"}
-        case "Movies":
-            return {"large_t": "a Movie", "large_i": "movie"}
-    return {"large_t": "Something", "large_i": "show"}
-
-
 def register_join_event(syncplay_join_group: callable):
     RPC.register_event("activity_join", syncplay_join_group)
 
@@ -34,6 +19,20 @@ def send_presence(
     playing: bool = False,
     syncplay_group: str = None,
 ):
+    def media_text(media_type: str):
+        match media_type:
+            case "Anime":
+                return {"large_t": "an Anime", "large_i": "anime"}
+            case "Anime Movies":
+                return {"large_t": "an Anime Movie", "large_i": "a_movie"}
+            case "Kdrama":
+                return {"large_t": "a Kdrama", "large_i": "kdrama"}
+            case "Shows":
+                return {"large_t": "a Show", "large_i": "show"}
+            case "Movies":
+                return {"large_t": "a Movie", "large_i": "movie"}
+        return {"large_t": "Something", "large_i": "show"}
+
     media_group = media_text(library)
     small_image = "finger_heart"
     large_image = media_group["large_i"]
