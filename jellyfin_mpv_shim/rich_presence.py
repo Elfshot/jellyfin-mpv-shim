@@ -1,9 +1,24 @@
 from pypresence import Client
 import time
 
-client_id = "743296148592263240"
+client_id = "990709917109354556"
 RPC = Client(client_id)
 RPC.start()
+
+
+def media_text(media_type: str):
+    match media_type:
+        case "Anime":
+            return {"large_t": "an Anime", "large_i": "anime"}
+        case "Anime Movies":
+            return {"large_t": "an Anime Movie", "large_i": "a_movie"}
+        case "Kdrama":
+            return {"large_t": "a Kdrama", "large_i": "kdrama"}
+        case "Shows":
+            return {"large_t": "a Show", "large_i": "show"}
+        case "Movies":
+            return {"large_t": "a Movie", "large_i": "movie"}
+    return {"large_t": "Something", "large_i": "show"}
 
 
 def register_join_event(syncplay_join_group: callable):
@@ -13,35 +28,36 @@ def register_join_event(syncplay_join_group: callable):
 def send_presence(
     title: str,
     subtitle: str,
+    library: str,
     playback_time: float = None,
     duration: float = None,
     playing: bool = False,
     syncplay_group: str = None,
 ):
-    small_image = "play-dark3" if playing else None
+    media_group = media_text(library)
+    small_image = "finger_heart"
+    large_image = media_group["large_i"]
+    large_text = "Watching " + media_group["large_t"]
     start = None
     end = None
+
     if playback_time is not None and duration is not None and playing:
         start = int(time.time() - playback_time)
         end = int(start + duration)
 
-    payload = {
-        "state": subtitle if subtitle else "Unknown Media",
-        "details": title,
-        "instance": False,
-        "large_image": "jellyfin2",
-        "start": start,
-        "end": end,
-        "large_text": "Jellyfin",
-        "small_image": small_image,
-    }
-
-    if syncplay_group:
-        payload["party_id"] = str(hash(syncplay_group))
-        payload["party_size"] = [1, 100]
-        payload["join"] = syncplay_group
-
-    RPC.set_activity(**payload)
+    RPC.set_activity(
+        state=subtitle,
+        details=title,
+        instance=False,
+        large_image=large_image,
+        start=start,
+        end=end,
+        large_text=large_text,
+        small_image=small_image,
+        # party_id=str(hash(syncplay_group)),
+        # party_size=[1, 100],
+        # join=syncplay_group,
+    )
 
 
 def clear_presence():

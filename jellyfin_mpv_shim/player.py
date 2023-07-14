@@ -476,7 +476,6 @@ class PlayerManager(object):
             and self._player.playback_time > self._video.intro_start
             and self._player.playback_time < self._video.intro_end
         ):
-
             if not self.is_in_intro:
                 if settings.skip_intro_always and not self.intro_has_triggered:
                     self.intro_has_triggered = True
@@ -953,6 +952,8 @@ class PlayerManager(object):
             ]
         if discord_presence:
             try:
+                library = self.lib_from_ancestors()
+
                 if (
                     self._video.is_tv
                     and self._video.item.get("IndexNumber") is not None
@@ -966,16 +967,22 @@ class PlayerManager(object):
                 else:
                     title = self._video.item.get("Name")
                     subtitle = str(self._video.item.get("ProductionYear", ""))
+
                 send_presence(
                     title,
                     subtitle,
+                    library,
                     player.playback_time,
                     player.duration,
                     not player.pause,
                     self.syncplay.current_group,
                 )
+                self.rpc_failed_shown = False
             except Exception:
                 log.error("Could not send Discord Rich Presence.", exc_info=True)
+                if not self.rpc_failed_shown:
+                    playerManager.show_text("Discord RPC Failed- Discord open?", 5000)
+                    self.rpc_failed_shown = True
         return options
 
     @synchronous("_tl_lock")
@@ -1133,6 +1140,18 @@ class PlayerManager(object):
             self.menu.menu_action(action)
         else:
             self.kb_seek(action)
+
+    def lib_from_ancestors(self) -> str:
+        try:
+            ancestors = self._video.parent.client.jellyfin.get_ancestors(
+                self._video.item_id
+            )
+            for ancestor in ancestors:
+                if ancestor["Type"] == "CollectionFolder":
+                    return ancestor["Name"]
+        except Exception as err:
+            log.error(err)
+        return ""
 
 
 playerManager = PlayerManager()
