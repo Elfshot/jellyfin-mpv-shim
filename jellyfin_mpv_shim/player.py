@@ -151,6 +151,7 @@ class PlayerManager(object):
         self.last_seek = None
         self.warned_about_transcode = False
         self.fullscreen_disable = False
+        self.rpc_failed_shown = False
         self.update_check = UpdateChecker(self)
         self.is_in_intro = False
         self.intro_has_triggered = False

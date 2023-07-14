@@ -18,14 +18,14 @@ if sys.platform.startswith("win32"):
 
 setup(
     name="jellyfin-mpv-shim",
-    version="2.6.0",
+    version="2.6.2",
     author="Ian Walton",
     author_email="iwalton3@gmail.com",
     description="Cast media from Jellyfin Mobile and Web apps to MPV.",
     license="GPLv3",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/jellyfin/jellyfin-mpv-shim",
+    url="https://github.com/Elfshot/jellyfin-mpv-shim",
     packages=["jellyfin_mpv_shim", "jellyfin_mpv_shim.display_mirror"],
     package_data={
         "jellyfin_mpv_shim.display_mirror": ["*.css", "*.html"],

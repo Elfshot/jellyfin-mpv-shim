@@ -47,7 +47,7 @@ class Settings(SettingsBase):
     transcode_dolby_vision: bool = True
     allow_transcode_to_h265: bool = False
     prefer_transcode_to_h265: bool = False
-    remote_kbps: int = 10000
+    remote_kbps: int = 100000
     local_kbps: int = 2147483
     subtitle_size: int = 100
     subtitle_color: str = "#FFFFFFFF"
@@ -128,9 +128,9 @@ class Settings(SettingsBase):
     force_audio_codec: Optional[str] = None
     health_check_interval: Optional[int] = 300
     skip_intro_always: bool = False
-    skip_intro_prompt: bool = False
+    skip_intro_prompt: bool = True
     thumbnail_enable: bool = True
-    thumbnail_jellyscrub: bool = False
+    thumbnail_jellyscrub: bool = True
     thumbnail_osc_builtin: bool = True
     thumbnail_preferred_size: int = 320
 
